@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Description TextView -->
+    <TextView
+        android:id="@+id/recentlySoldDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Description"
+        android:inputType="textMultiLine"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:minLines="3"/>
+
+    <!-- Buttons -->
+    <Button
+        android:id="@+id/btnBid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bid"
+        android:textSize="18sp"
+        android:backgroundTint="@color/mint_green"
+        app:cornerRadius="20dp"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/btnCustomBid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Custom Bid"
+        android:textSize="18sp"
+        android:backgroundTint="@color/teal_200"
+        app:cornerRadius="20dp"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnMailOwner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mail Seller"
+        android:textSize="18sp"
+        android:backgroundTint="@color/mail_seller"
+        app:cornerRadius="20dp"
+        android:layout_marginTop="8dp"/>
+
+</LinearLayout>

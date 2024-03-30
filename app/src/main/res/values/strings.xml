@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">auctiontest</string>
+
+    <string-array name="dropdown_items_array">
+        <item>Others</item>
+        <item>Watches</item>
+        <item>Books</item>
+        <item>Accessories</item>
+        <item>Clothes</item>
+        <item>Art</item>
+        <item>Music</item>
+        <item>Gifts</item>
+
+    </string-array>
+
+
+</resources>
