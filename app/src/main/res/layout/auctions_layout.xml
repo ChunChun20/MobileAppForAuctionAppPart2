@@ -7,7 +7,7 @@
     android:layout_marginTop="15dp"
     android:padding="8dp"
     android:layout_margin="15dp"
-    android:background="@drawable/custom_edittext">
+    android:background="@drawable/custom_edittext_filled">
 
 
     <TextView

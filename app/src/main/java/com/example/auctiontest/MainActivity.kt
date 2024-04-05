@@ -1,7 +1,12 @@
 package com.example.auctiontest
 
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,9 +34,18 @@ import org.json.JSONObject
 import java.io.IOException
 import java.math.BigDecimal
 import java.math.RoundingMode
+import android.util.Base64
+import android.view.View
+import android.widget.FrameLayout
+import android.widget.ImageView
+import androidx.core.app.NotificationCompat
+import android.app.NotificationChannel
 
 
 class MainActivity : AppCompatActivity() {
+
+    var CHANNEL_ID = "1"
+    var NOTIFICATION_ID = 1
 
     private lateinit var recentlySoldBtn: ImageButton
     private lateinit var loggedUser: TextView
@@ -101,6 +115,10 @@ class MainActivity : AppCompatActivity() {
             recreate()
         }
 
+
+        val loadingLayout = findViewById<FrameLayout>(R.id.loadingLayout)
+        loadingLayout.visibility = View.VISIBLE
+
         FetchData().execute()
     }
 
@@ -128,6 +146,8 @@ class MainActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: Pair<List<AuctionItem>?, String?>) {
             super.onPostExecute(result)
+            val loadingLayout = findViewById<FrameLayout>(R.id.loadingLayout)
+            loadingLayout.visibility = View.GONE
             result.first?.let { items ->
                 val inflater = LayoutInflater.from(this@MainActivity)
                 val itemContainer = findViewById<LinearLayout>(R.id.parentLayout)
@@ -178,14 +198,38 @@ class MainActivity : AppCompatActivity() {
 
                         val recentlySoldDescriptionEditText =
                             dialogView.findViewById<TextView>(R.id.recentlySoldDescription)
+                        val itemImageView = dialogView.findViewById<ImageView>(R.id.itemImage)
                         val btnMailOwner = dialogView.findViewById<Button>(R.id.btnMailOwner)
                         val btnBidNow = dialogView.findViewById<Button>(R.id.btnBid)
                         val btnCustomBidNow = dialogView.findViewById<Button>(R.id.btnCustomBid)
+                        val switchViewButton = dialogView.findViewById<Button>(R.id.btnSwitchView)
 
 
                         recentlySoldDescriptionEditText.setText(item.description)
 
+
+                        // Convert decoded byte array to Bitmap
+                        val bitmap = BitmapFactory.decodeByteArray(item.imageData, 0, item.imageData.size)
+                        // Set bitmap to ImageView
+                        itemImageView.setImageBitmap(bitmap)
+
+
                         val alertDialog = dialogBuilder.create()
+
+
+                        switchViewButton.setOnClickListener {
+                            // Toggle visibility of description and image views
+                            if (recentlySoldDescriptionEditText.visibility == View.VISIBLE) {
+                                recentlySoldDescriptionEditText.visibility = View.GONE
+                                itemImageView.visibility = View.VISIBLE
+                                switchViewButton.text = "<-"
+                            } else {
+                                recentlySoldDescriptionEditText.visibility = View.VISIBLE
+                                itemImageView.visibility = View.GONE
+                                switchViewButton.text = "->"
+                            }
+                        }
+
 
 
                         btnMailOwner.setOnClickListener {
@@ -405,11 +449,13 @@ class MainActivity : AppCompatActivity() {
 
 
             if (success) {
-                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                val success = "Successful Bid"
+                showBidNotification(message,success)
                 recreate()
             }
             else {
-                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                val success = "Failed bid"
+                showBidNotification(message,success)
                 recreate()
             }
         }
@@ -451,11 +497,13 @@ class MainActivity : AppCompatActivity() {
 
 
             if (success) {
-                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                val success = "Successful Bid"
+                showBidNotification(message,success)
                 recreate()
             }
             else {
-                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                val success = "Failed Bid"
+                showBidNotification(message,success)
                 recreate()
             }
         }
@@ -477,11 +525,14 @@ class MainActivity : AppCompatActivity() {
                 val price = item.getString("bid")
                 val end = item.getString("end")
                 val highestBidder = item.getString("highest_bidder")
+                val imageBase64 = item.getString("image")
+
+                val imageData = Base64.decode(imageBase64, Base64.DEFAULT)
 
 
 
 
-                items.add(AuctionItem(itemId,description, start,category,name,sellerId,price, end,highestBidder ))
+                items.add(AuctionItem(itemId,description, start,category,name,sellerId,price, end,highestBidder, imageData ))
             }
             return items
         }
@@ -558,6 +609,43 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+
+    private fun showBidNotification(message: String, success: String) {
+        // Create an explicit intent for launching the MainActivity when the notification is clicked
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE // Adding FLAG_IMMUTABLE
+        )
+
+        // Create notification
+        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.img)
+            .setContentTitle(success)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        // Get the notification manager
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // Check if Android version is Oreo or higher, and if so, create a notification channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Channel Name",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        // Show the notification
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
 }

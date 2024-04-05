@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="15dp"
     android:padding="8dp"
-    android:background="@drawable/custom_edittext">
+    android:background="@drawable/custom_edittext_filled">
+
 
 
     <TextView
@@ -61,10 +62,14 @@
         android:backgroundTint="@color/lavender"
         android:textSize="18sp"
         app:cornerRadius="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/deleteButton"
-        app:layout_constraintTop_toBottomOf="@+id/priceView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/categoryView"
+
+
+
         android:layout_marginEnd="8dp"
         />
 
@@ -77,10 +82,10 @@
         android:backgroundTint="@color/lavender"
         android:textSize="18sp"
         app:cornerRadius="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/infoButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/categoryView"
+        app:layout_constraintStart_toEndOf="@+id/infoButton"
+        app:layout_constraintTop_toBottomOf="@+id/priceView"
         android:layout_marginEnd="8dp"
         />
 
