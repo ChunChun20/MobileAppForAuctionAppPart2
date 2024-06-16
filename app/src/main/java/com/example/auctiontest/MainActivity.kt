@@ -111,6 +111,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        loggedUser.setOnClickListener {
+            val intent = Intent(this@MainActivity, UserProfile::class.java)
+            intent.putExtra("id", userId)
+            startActivity(intent)
+        }
+
         pageReloadBtn.setOnClickListener {
             recreate()
         }
@@ -203,6 +209,7 @@ class MainActivity : AppCompatActivity() {
                         val btnBidNow = dialogView.findViewById<Button>(R.id.btnBid)
                         val btnCustomBidNow = dialogView.findViewById<Button>(R.id.btnCustomBid)
                         val switchViewButton = dialogView.findViewById<Button>(R.id.btnSwitchView)
+                        val btnViewUser = dialogView.findViewById<Button>(R.id.btnViewUser)
 
 
                         recentlySoldDescriptionEditText.setText(item.description)
@@ -230,7 +237,11 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-
+                        btnViewUser.setOnClickListener {
+                            val intent = Intent(this@MainActivity, UserProfile::class.java)
+                            intent.putExtra("id", item.sellerId)
+                            startActivity(intent)
+                        }
 
                         btnMailOwner.setOnClickListener {
 

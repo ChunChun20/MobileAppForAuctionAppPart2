@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">auctiontest</string>
+    <string name="app_name">BidMancer</string>
 
     <string-array name="dropdown_items_array">
         <item>Others</item>

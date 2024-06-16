@@ -6,11 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-<!--    <TextView-->
-<!--        android:id="@+id/recentlySoldItem"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Item Name"/>-->
+
 
     <TextView
         android:id="@+id/recentlySoldDescription"
@@ -31,17 +27,16 @@
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:layout_marginTop="8dp"
-        android:visibility="gone" /> <!-- Initially hidden -->
+        android:visibility="gone" />
 
-    <!-- FrameLayout to hold both views -->
+
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp">
 
-        <!-- Add your buttons here -->
-        <!-- Buttons -->
+
         <Button
             android:id="@+id/recentlySoldBtnSwitchView"
             android:layout_width="wrap_content"

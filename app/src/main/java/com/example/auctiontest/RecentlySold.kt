@@ -23,7 +23,6 @@ import org.json.JSONObject
 
 class RecentlySold : AppCompatActivity() {
 
-
     private var currentPage = 1
     private val perPage = 5
 
@@ -34,19 +33,25 @@ class RecentlySold : AppCompatActivity() {
         fetchData(currentPage)
 
         val nextPageButton = findViewById<Button>(R.id.nextPageButton)
+        val prevPageButton = findViewById<Button>(R.id.prevPageButton)
+
+        // Set initial button texts
+        updateButtonTexts()
+
         nextPageButton.setOnClickListener {
             currentPage++
             fetchData(currentPage)
 
             // Show prevPageButton when currentPage > 1
-            val prevPageButton = findViewById<Button>(R.id.prevPageButton)
             if (currentPage > 1) {
                 prevPageButton.visibility = View.VISIBLE
             }
+
+            // Update button texts
+            updateButtonTexts()
         }
 
         // Button to load previous page
-        val prevPageButton = findViewById<Button>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
             if (currentPage > 1) {
                 currentPage--
@@ -57,6 +62,9 @@ class RecentlySold : AppCompatActivity() {
             if (currentPage == 1) {
                 prevPageButton.visibility = View.GONE
             }
+
+            // Update button texts
+            updateButtonTexts()
         }
 
         // Hide prevPageButton if currentPage is 1 initially
@@ -65,6 +73,12 @@ class RecentlySold : AppCompatActivity() {
         }
     }
 
+    private fun updateButtonTexts() {
+        val nextPageButton = findViewById<Button>(R.id.nextPageButton)
+        val prevPageButton = findViewById<Button>(R.id.prevPageButton)
+        nextPageButton.text = "Page ${currentPage + 1}"
+        prevPageButton.text = "Page ${currentPage - 1}"
+    }
 
     private fun fetchData(page: Int) {
         val loadingLayout = findViewById<FrameLayout>(R.id.loadingLayout)
@@ -114,7 +128,6 @@ class RecentlySold : AppCompatActivity() {
                 for (item in items) {
                     val itemView = inflater.inflate(R.layout.recently_sold_layout, null)
 
-
                     val layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
@@ -134,8 +147,6 @@ class RecentlySold : AppCompatActivity() {
                     var RecentlySoldItemPrice = item.price
                     var RecentlySoldItemCategory = item.category
 
-
-
                     nameView.text = "Name: $RecentlySoldItemName"
                     dateView.text = "Date: $RecentlySoldItemDate"
                     priceView.text = "Sold for: $RecentlySoldItemPrice$"
@@ -147,14 +158,11 @@ class RecentlySold : AppCompatActivity() {
                             .setView(dialogView)
                             .setTitle("$RecentlySoldItemName")
 
-//                        val recentlySoldItemTextView = dialogView.findViewById<TextView>(R.id.recentlySoldItem)
                         val recentlySoldDescriptionEditText = dialogView.findViewById<TextView>(R.id.recentlySoldDescription)
                         val itemImageView = dialogView.findViewById<ImageView>(R.id.recentlySoldItemImage)
                         val btnClose = dialogView.findViewById<Button>(R.id.btnClose)
                         val switchViewButton = dialogView.findViewById<Button>(R.id.recentlySoldBtnSwitchView)
 
-
-//                        recentlySoldItemTextView.text = item.name
                         recentlySoldDescriptionEditText.setText(item.description)
 
                         // Convert decoded byte array to Bitmap
@@ -162,12 +170,7 @@ class RecentlySold : AppCompatActivity() {
                         // Set bitmap to ImageView
                         itemImageView.setImageBitmap(bitmap)
 
-
-
-
-
                         val alertDialog = dialogBuilder.create()
-
 
                         switchViewButton.setOnClickListener {
                             // Toggle visibility of description and image views
@@ -182,7 +185,6 @@ class RecentlySold : AppCompatActivity() {
                             }
                         }
 
-
                         btnClose.setOnClickListener {
                             alertDialog.dismiss()
                         }
@@ -191,14 +193,9 @@ class RecentlySold : AppCompatActivity() {
                     }
 
                     itemContainer.addView(itemView)
-
-
                 }
-
-
-
-
             }
+
             result.second?.let { errorMessage ->
                 Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_LONG).show()
             }
@@ -221,7 +218,7 @@ class RecentlySold : AppCompatActivity() {
 
                 val imageData = Base64.decode(imageBase64, Base64.DEFAULT)
 
-                items.add(RecentlySoldItem(category, name, date, price, description,itemId,imageData))
+                items.add(RecentlySoldItem(category, name, date, price, description, itemId, imageData))
             }
             return items
         }

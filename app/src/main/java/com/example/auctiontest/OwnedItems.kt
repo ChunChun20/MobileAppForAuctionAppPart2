@@ -29,30 +29,36 @@ class OwnedItems : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_owned_items)
 
-
         userId = intent.getStringExtra("id") ?: ""
 
         fetchData(currentPage)
 
         val nextPageButton = findViewById<Button>(R.id.nextPageButton)
+        val prevPageButton = findViewById<Button>(R.id.prevPageButton)
+
         nextPageButton.setOnClickListener {
             currentPage++
             fetchData(currentPage)
 
+            // Update button texts with the current page numbers
+            nextPageButton.text = "Page ${currentPage + 1}"
+            prevPageButton.text = "Page ${currentPage - 1}"
+
             // Show prevPageButton when currentPage > 1
-            val prevPageButton = findViewById<Button>(R.id.prevPageButton)
             if (currentPage > 1) {
                 prevPageButton.visibility = View.VISIBLE
             }
         }
 
-        // Button to load previous page
-        val prevPageButton = findViewById<Button>(R.id.prevPageButton)
         prevPageButton.setOnClickListener {
             if (currentPage > 1) {
                 currentPage--
                 fetchData(currentPage)
             }
+
+            // Update button texts with the current page numbers
+            nextPageButton.text = "Page ${currentPage + 1}"
+            prevPageButton.text = "Page ${currentPage - 1}"
 
             // Hide prevPageButton if currentPage is 1
             if (currentPage == 1) {
@@ -65,7 +71,6 @@ class OwnedItems : AppCompatActivity() {
             prevPageButton.visibility = View.GONE
         }
     }
-
 
     private fun fetchData(page: Int){
         val loadingLayout = findViewById<FrameLayout>(R.id.loadingLayout)
@@ -109,17 +114,22 @@ class OwnedItems : AppCompatActivity() {
                 itemContainer.removeAllViews()
 
                 val nextPageButton = findViewById<Button>(R.id.nextPageButton)
+                val prevPageButton = findViewById<Button>(R.id.prevPageButton)
+
+                // Update button texts with the current page numbers
+                nextPageButton.text = "Page ${currentPage + 1}"
+                prevPageButton.text = "Page ${currentPage - 1}"
+
                 nextPageButton.visibility = if (currentPage == result.third) View.GONE else View.VISIBLE
 
                 for (item in items) {
                     val itemView = inflater.inflate(R.layout.owned_item_layout, null)
 
-
                     val layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     )
-                    layoutParams.setMargins(0, 8, 0, 16) //
+                    layoutParams.setMargins(0, 8, 0, 16)
 
                     itemView.layoutParams = layoutParams
 
@@ -131,12 +141,10 @@ class OwnedItems : AppCompatActivity() {
                     val deleteButton = itemView.findViewById<Button>(R.id.deleteButton)
                     deleteButton.tag = item.id
 
-                    var RecentlySoldItemName = item.name.substring(0, item.name.length - 6)
-                    var RecentlySoldItemDate = item.date.substringBefore(",")
-                    var RecentlySoldItemPrice = item.price
-                    var RecentlySoldItemCategory = item.category
-
-
+                    val RecentlySoldItemName = item.name.substring(0, item.name.length - 6)
+                    val RecentlySoldItemDate = item.date.substringBefore(",")
+                    val RecentlySoldItemPrice = item.price
+                    val RecentlySoldItemCategory = item.category
 
                     nameView.text = "Name: $RecentlySoldItemName"
                     dateView.text = "Date: $RecentlySoldItemDate"
@@ -150,7 +158,6 @@ class OwnedItems : AppCompatActivity() {
                             .setView(dialogView)
                             .setTitle("$RecentlySoldItemName")
 
-//                        val recentlySoldItemTextView = dialogView.findViewById<TextView>(R.id.recentlySoldItem)
                         val recentlySoldDescriptionEditText =
                             dialogView.findViewById<TextView>(R.id.recentlySoldDescription)
                         val btnClose = dialogView.findViewById<Button>(R.id.btnClose)
@@ -216,11 +223,8 @@ class OwnedItems : AppCompatActivity() {
                         }
                     }
 
-
-
                     itemContainer.addView(itemView)
                 }
-
             }
             result.second?.let { errorMessage ->
                 Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_LONG).show()
@@ -243,15 +247,9 @@ class OwnedItems : AppCompatActivity() {
                 val imageBase64 = item.getString("image")
 
                 val imageData = Base64.decode(imageBase64, Base64.DEFAULT)
-                items.add(RecentlySoldItem(category,name,date,price,description,itemId,imageData))
+                items.add(RecentlySoldItem(category, name, date, price, description, itemId, imageData))
             }
             return items
         }
     }
-
-
-
-
-
-
 }

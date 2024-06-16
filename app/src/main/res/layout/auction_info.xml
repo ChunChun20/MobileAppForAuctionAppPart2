@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
+<ScrollView
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -85,6 +86,17 @@
             android:text="Mail Seller"
             android:textSize="18sp"
             android:backgroundTint="@color/mail_seller"
+            app:cornerRadius="20dp"
+            android:layout_marginTop="8dp" />
+
+        <!-- View User Button -->
+        <Button
+            android:id="@+id/btnViewUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Seller"
+            android:textSize="18sp"
+            android:backgroundTint="@color/view_user"
             app:cornerRadius="20dp"
             android:layout_marginTop="8dp" />
 
