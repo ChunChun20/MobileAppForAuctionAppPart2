@@ -113,6 +113,7 @@ class Login : AppCompatActivity() {
 
     private fun showError(message: String) {
         // Display error message to the user (e.g., in a TextView)
-        errorTextView.text = message
+        Toast.makeText(this@Login, message, Toast.LENGTH_LONG).show()
+//        errorTextView.text = message
     }
 }

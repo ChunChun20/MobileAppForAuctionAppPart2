@@ -156,14 +156,14 @@ class RecentlySold : AppCompatActivity() {
                         val dialogView = LayoutInflater.from(this@RecentlySold).inflate(R.layout.recently_sold_info, null)
                         val dialogBuilder = AlertDialog.Builder(this@RecentlySold)
                             .setView(dialogView)
-                            .setTitle("$RecentlySoldItemName")
+                            .setTitle("Item: $RecentlySoldItemName")
 
                         val recentlySoldDescriptionEditText = dialogView.findViewById<TextView>(R.id.recentlySoldDescription)
                         val itemImageView = dialogView.findViewById<ImageView>(R.id.recentlySoldItemImage)
                         val btnClose = dialogView.findViewById<Button>(R.id.btnClose)
                         val switchViewButton = dialogView.findViewById<Button>(R.id.recentlySoldBtnSwitchView)
 
-                        recentlySoldDescriptionEditText.setText(item.description)
+                        recentlySoldDescriptionEditText.setText("Description: ${item.description}")
 
                         // Convert decoded byte array to Bitmap
                         val bitmap = BitmapFactory.decodeByteArray(item.imageData, 0, item.imageData.size)
@@ -213,12 +213,13 @@ class RecentlySold : AppCompatActivity() {
                 val date = item.getString("end")
                 val price = item.getString("bid")
                 val description = item.getString("description")
+                val seller = item.getInt("seller")
                 val itemId = item.getString("id")
                 val imageBase64 = item.getString("image")
 
                 val imageData = Base64.decode(imageBase64, Base64.DEFAULT)
 
-                items.add(RecentlySoldItem(category, name, date, price, description, itemId, imageData))
+                items.add(RecentlySoldItem(category, name, date, price, description,seller, itemId, imageData))
             }
             return items
         }

@@ -9,15 +9,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import java.io.IOException
 
 class OwnedItems : AppCompatActivity() {
 
@@ -25,11 +34,15 @@ class OwnedItems : AppCompatActivity() {
     private val perPage = 5
     private lateinit var userId: String
 
+    private var currentUser: String = ""
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_owned_items)
 
         userId = intent.getStringExtra("id") ?: ""
+        currentUser = intent.getStringExtra("username") ?: ""
 
         fetchData(currentPage)
 
@@ -139,6 +152,7 @@ class OwnedItems : AppCompatActivity() {
                     val categoryView = itemView.findViewById<TextView>(R.id.categoryView)
                     val infoButton = itemView.findViewById<Button>(R.id.infoButton)
                     val deleteButton = itemView.findViewById<Button>(R.id.deleteButton)
+                    val reviewButton = itemView.findViewById<Button>(R.id.reviewButton)
                     deleteButton.tag = item.id
 
                     val RecentlySoldItemName = item.name.substring(0, item.name.length - 6)
@@ -148,15 +162,63 @@ class OwnedItems : AppCompatActivity() {
 
                     nameView.text = "Name: $RecentlySoldItemName"
                     dateView.text = "Date: $RecentlySoldItemDate"
-                    priceView.text = "Sold for: $RecentlySoldItemPrice$"
+                    priceView.text = "Bought for: $RecentlySoldItemPrice$"
                     categoryView.text = "Category: $RecentlySoldItemCategory"
+
+
+                    reviewButton.setOnClickListener {
+
+
+                        val seller = item.seller
+                        val reviewer_id = userId
+                        val reviewer_name = currentUser
+
+
+                        val dialogView = layoutInflater.inflate(R.layout.leave_review, null)
+                        val dialogBuilder = AlertDialog.Builder(this@OwnedItems)
+                            .setView(dialogView)
+                            .setTitle("Add review to owner of ${item.name.substring(0, item.name.length - 6)}")
+
+                        val dialog = dialogBuilder.create()
+                        dialog.show()
+
+                        val btnSend = dialogView.findViewById<Button>(R.id.btnSend)
+                        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+                        val reviewType = dialogView.findViewById<Spinner>(R.id.reviewType)
+                        val editMessage = dialogView.findViewById<EditText>(R.id.editMessage)
+
+
+
+                        btnSend.setOnClickListener {
+                            val review = reviewType.selectedItem.toString()
+                            val message = editMessage.text.toString()
+
+
+                            GlobalScope.launch(Dispatchers.Main) {
+                                try {
+                                    val response = sendReview(review, message,seller,reviewer_id,reviewer_name,item.name)
+                                    handleSendReplyReviewResponse(response)
+                                } catch (e: IOException) {
+                                    // Handle network error
+                                    e.printStackTrace()
+                                    // Show error on UI if necessary
+                                }
+                            }
+                            dialog.dismiss()
+                        }
+                        btnCancel.setOnClickListener {
+                            dialog.dismiss()
+                        }
+                    }
+
+
 
                     infoButton.setOnClickListener {
                         val dialogView = LayoutInflater.from(this@OwnedItems)
                             .inflate(R.layout.recently_sold_info, null)
                         val dialogBuilder = AlertDialog.Builder(this@OwnedItems)
                             .setView(dialogView)
-                            .setTitle("$RecentlySoldItemName")
+                            .setTitle("Item: $RecentlySoldItemName")
 
                         val recentlySoldDescriptionEditText =
                             dialogView.findViewById<TextView>(R.id.recentlySoldDescription)
@@ -168,7 +230,7 @@ class OwnedItems : AppCompatActivity() {
 
                         itemImageView.setImageBitmap(bitmap)
 
-                        recentlySoldDescriptionEditText.setText(item.description)
+                        recentlySoldDescriptionEditText.setText("Description: ${item.description}")
 
                         val alertDialog = dialogBuilder.create()
 
@@ -231,6 +293,50 @@ class OwnedItems : AppCompatActivity() {
             }
         }
 
+        private suspend fun sendReview(review: String, message: String,seller: Int,reviewer_id: String,reviewer_name: String,item_name: String): String {
+            val client = OkHttpClient()
+
+            val url = "http://192.168.0.104:5000/leave_review_mobile"
+            val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+            val requestBody = JSONObject().apply {
+                put("seller_id", seller)
+                put("review_type", review)
+                put("reviewer_id", reviewer_id)
+                put("review_message", message)
+                put("reviewer_name", reviewer_name)
+                put("item_name",item_name)
+            }.toString().toRequestBody(jsonMediaType)
+
+            val request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+            return withContext(Dispatchers.IO) {
+                val response = client.newCall(request).execute()
+
+                if (!response.isSuccessful) {
+                    throw IOException("Unexpected code $response")
+                }
+
+                response.body?.string() ?: ""
+            }
+        }
+
+        private fun handleSendReplyReviewResponse(response: String) {
+            val jsonResponse = JSONObject(response)
+            val success = jsonResponse.getBoolean("success")
+
+            if (success) {
+                Toast.makeText(this@OwnedItems, "Successfuly placed review!", Toast.LENGTH_LONG).show()
+                recreate()
+            } else {
+                val message = jsonResponse.optString("message", "")
+                Toast.makeText(this@OwnedItems, message, Toast.LENGTH_LONG).show()
+
+            }
+        }
+
         private fun parseData(data: String?): List<RecentlySoldItem>? {
             data ?: return null
             val jsonObject = JSONObject(data)
@@ -243,11 +349,12 @@ class OwnedItems : AppCompatActivity() {
                 val name = item.getString("name")
                 val price = item.getString("bid")
                 val description = item.getString("description")
+                val seller = item.getInt("seller")
                 val itemId = item.getString("id")
                 val imageBase64 = item.getString("image")
 
                 val imageData = Base64.decode(imageBase64, Base64.DEFAULT)
-                items.add(RecentlySoldItem(category, name, date, price, description, itemId, imageData))
+                items.add(RecentlySoldItem(category, name, date, price, description,seller, itemId, imageData))
             }
             return items
         }

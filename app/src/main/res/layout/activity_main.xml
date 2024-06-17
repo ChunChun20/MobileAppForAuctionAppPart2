@@ -8,29 +8,30 @@
     >
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="409dp"
         android:layout_height="94dp"
         android:layout_marginTop="4dp"
+        android:background="@color/lightgray"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/lightgray">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <ImageButton
             android:id="@+id/page_reload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="20dp"
             android:background="@null"
             android:contentDescription="Reload  Page"
             android:src="@drawable/page_reload_48"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/Auctions"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
@@ -40,10 +41,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
-            android:text="TextView"
-            android:padding="4dp"
             android:background="@drawable/custom_editext_mint"
-            android:textColor="@color/black"
+            android:padding="4dp"
+            android:text="TextView"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/loggedUser"
@@ -56,10 +57,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
-            android:text="TextView"
-            android:padding="4dp"
             android:background="@drawable/custom_editext_mint"
-            android:textColor="@color/black"
+            android:padding="4dp"
+            android:text="TextView"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/logoutBtn"
@@ -73,16 +74,15 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
 
+            android:background="@drawable/custom_editext_mint"
             android:padding="4dp"
             android:text="Logout"
-            android:background="@drawable/custom_editext_mint"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/loggedUser"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/Auctions"
@@ -90,8 +90,8 @@
             android:layout_height="wrap_content"
             android:text="Auctions"
             android:textColor="@color/lavender"
-            android:textStyle="bold"
             android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="Mail Box"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="Create"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -211,7 +211,7 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="Owned Items"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -252,7 +252,7 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="Sold"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

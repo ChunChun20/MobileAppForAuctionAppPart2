@@ -63,7 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:backgroundTint="@color/mint_green"
+            android:backgroundTint="@color/green"
             app:cornerRadius="20dp"
             android:layout_weight="1"
 

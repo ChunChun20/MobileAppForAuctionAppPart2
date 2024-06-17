@@ -14,4 +14,9 @@
     </string-array>
 
 
+    <string-array name="subject_options">
+        <item>Positive</item>
+        <item>Negative</item>
+    </string-array>
+
 </resources>

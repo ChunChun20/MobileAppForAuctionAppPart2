@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-
-
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/editSubject"
+    <Spinner
+        android:id="@+id/reviewType"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Subject"
-        android:text=""/>
+        android:layout_height="47dp"
+        android:layout_marginBottom="8dp"
+        android:entries="@array/subject_options" />
 
     <EditText
         android:id="@+id/editMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Message"
+        android:hint="Review: "
         android:inputType="textMultiLine"
         android:minLines="3"/>
 
@@ -51,5 +49,4 @@
             android:layout_weight="1"
             android:text="Cancel"/>
     </LinearLayout>
-
 </LinearLayout>

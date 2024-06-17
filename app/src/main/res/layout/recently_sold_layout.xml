@@ -56,7 +56,7 @@
         android:id="@+id/infoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="More Info"
+        android:text="Info"
         android:onClick="onInfoButtonClick"
 
         android:textSize="18sp"

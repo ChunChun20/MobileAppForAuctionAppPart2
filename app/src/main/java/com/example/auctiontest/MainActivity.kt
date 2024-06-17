@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var createItem: ImageButton
     private lateinit var mailBoxBtn: ImageButton
     private lateinit var pageReloadBtn: ImageButton
+    private lateinit var logoutBtn: TextView
 
     private var currentUser: String = ""
     private var currentUserId: String = ""
@@ -70,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         createItem = findViewById(R.id.createItem)
         mailBoxBtn = findViewById(R.id.mailBox)
         pageReloadBtn = findViewById(R.id.page_reload)
+        logoutBtn = findViewById(R.id.logoutBtn)
 
 
         val userId = intent.getStringExtra("id").toString()
@@ -87,6 +89,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        logoutBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, Login::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+
         recentlySoldBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, RecentlySold::class.java)
             startActivity(intent)
@@ -95,6 +103,7 @@ class MainActivity : AppCompatActivity() {
         ownedBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, OwnedItems::class.java)
             intent.putExtra("id", userId)
+            intent.putExtra("username", currentUser)
             startActivity(intent)
         }
 
@@ -462,6 +471,7 @@ class MainActivity : AppCompatActivity() {
             if (success) {
                 val success = "Successful Bid"
                 showBidNotification(message,success)
+                Toast.makeText(this@MainActivity, "Successfully placed Bid", Toast.LENGTH_LONG).show()
                 recreate()
             }
             else {
@@ -510,6 +520,7 @@ class MainActivity : AppCompatActivity() {
             if (success) {
                 val success = "Successful Bid"
                 showBidNotification(message,success)
+                Toast.makeText(this@MainActivity, "Successfully placed custom Bid", Toast.LENGTH_LONG).show()
                 recreate()
             }
             else {
